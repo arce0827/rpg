@@ -1,4 +1,4 @@
-#include "GameEngine.hpp"
+#include "core/GameEngine.hpp"
 #include <iostream>
 
 int main() {

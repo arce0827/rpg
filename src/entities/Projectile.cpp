@@ -1,4 +1,4 @@
-#include "Projectile.hpp"
+#include "entities/Projectile.hpp"
 
 Projectile::Projectile(const sf::Vector2f& startPos, const sf::Vector2f& direction, float speed) :
     position(startPos),
@@ -9,7 +9,7 @@ Projectile::Projectile(const sf::Vector2f& startPos, const sf::Vector2f& directi
     // Setup sprite
     sprite.setRadius(5.0f);
     sprite.setFillColor(sf::Color::Yellow);
-    sprite.setOrigin(sprite.getRadius(), sprite.getRadius());
+    sprite.setOrigin({sprite.getRadius(), sprite.getRadius()});
     sprite.setPosition(position);
 }
 

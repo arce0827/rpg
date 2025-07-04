@@ -9,7 +9,7 @@ class GameEngine {
     private:
         sf::RenderWindow window;
         std::unique_ptr<Player> player;
-        sf::clock clock;
+        sf::Clock clock;
         bool isRunning;
 
         enum class GameState {
@@ -29,4 +29,4 @@ class GameEngine {
         void render();
 
         sf::RenderWindow& getWindow() {return window;}
-}
+};

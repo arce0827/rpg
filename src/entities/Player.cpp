@@ -1,5 +1,5 @@
-#include "Player.hpp"
-#include "Projectile.hpp"
+#include "entities/Player.hpp"
+#include "entities/Projectile.hpp"
 #include <SFML/Window/Keyboard.hpp>
 #include <iostream>
 
@@ -14,7 +14,7 @@ Player::Player(float x, float y) :
     // Setup sprite
     sprite.setRadius(20.0f);
     sprite.setFillColor(sf::Color::Blue);
-    sprite.setOrigin(sprite.getRadius(), sprite.getRadius());
+    sprite.setOrigin({sprite.getRadius(), sprite.getRadius()});
     sprite.setPosition(position);
 }
 
@@ -46,16 +46,16 @@ void Player::handleInput(float deltaTime) {
     velocity = sf::Vector2f(0.0f, 0.0f);
     
     // Movement
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Up)) {
         velocity.y -= speed;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Down)) {
         velocity.y += speed;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Left)) {
         velocity.x -= speed;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Right)) {
         velocity.x += speed;
     }
     
@@ -71,16 +71,16 @@ void Player::handleShooting() {
         sf::Vector2f shootDirection(0.0f, 0.0f);
         
         // Shooting with arrow keys
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Up)) {
             shootDirection.y = -1.0f;
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Down)) {
             shootDirection.y = 1.0f;
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Left)) {
             shootDirection.x = -1.0f;
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Right)) {
             shootDirection.x = 1.0f;
         }
         

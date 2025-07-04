@@ -9,7 +9,7 @@ class Projectile {
         float damage;
         bool isActive;
     public:
-        Projectile(const sf::Vector2d& startPos, const sf::Vector2f& direction, float speed);
+        Projectile(const sf::Vector2f& startPos, const sf::Vector2f& direction, float speed);
         ~Projectile();
 
         void update(float deltaTime);
@@ -23,7 +23,7 @@ class Projectile {
             return damage;
         }
 
-        bool isActive() const {
+        bool getIsActive() const {
             return isActive;
         }
 
