@@ -80,7 +80,7 @@ Project repository:
 
 |    Date    | Time From | Time To | Breaks | Activity | Description | Result |
 |------------|-----------|---------|--------|----------|-------------|--------|
-| TBD | - | - | - | - | - | - |
+| 2025-07-02 | 18:00 | 20:10 | - | A&D | Simple coding and implementations of classes | Finished GameEngine.cpp/.hpp and Player.cpp/.hpp |
 | TBD | - | - | - | - | - | - |
 | TBD | - | - | - | - | - | - |
 
