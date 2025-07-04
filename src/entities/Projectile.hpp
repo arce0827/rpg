@@ -1,0 +1,37 @@
+#pragma once
+#include <SFML/Graphics.hpp>
+
+class Projectile {
+    private:
+        sf::CircleShape sprite;
+        sf::Vector2f position;
+        sf::Vector2f velocity;
+        float damage;
+        bool isActive;
+    public:
+        Projectile(const sf::Vector2d& startPos, const sf::Vector2f& direction, float speed);
+        ~Projectile();
+
+        void update(float deltaTime);
+        void render(sf::RenderWindow& window);
+
+        sf::Vector2f getPosition() const {
+            return position;
+        }
+
+        float getDamage() const {
+            return damage;
+        }
+
+        bool isActive() const {
+            return isActive;
+        }
+
+        sf::FloatRect getBounds() const {
+            return sprite.getGlobalBounds();
+        }
+
+        void setActive(bool state) {
+            isActive = state;
+        }
+    };
