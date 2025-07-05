@@ -46,16 +46,16 @@ void Player::handleInput(float deltaTime) {
     velocity = sf::Vector2f(0.0f, 0.0f);
     
     // Movement
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Up)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::W)) {
         velocity.y -= speed;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Down)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::S)) {
         velocity.y += speed;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Left)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::A)) {
         velocity.x -= speed;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Right)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::D)) {
         velocity.x += speed;
     }
     
