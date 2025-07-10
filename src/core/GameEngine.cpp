@@ -2,6 +2,8 @@
 #include "entities/Player.hpp"
 #include "entities/Enemy.hpp"
 #include <iostream>
+#include <vector>
+#include <memory>
 #include <optional>
 
 GameEngine::GameEngine():
@@ -46,6 +48,11 @@ void GameEngine::update(float deltaTime) {
     if (currentState == GameState::PLAYING) {
         player->update(deltaTime, window);
         updateEnemies(deltaTime);
+
+        collisionManager.checkPlayerProjectilesVsEnemies(*player, enemies);
+        collisionManager.checkEnemyProjectilesVsPlayer(enemies, *player);
+        collisionManager.checkEntityCollisions(*player, enemies);
+
 
         // Keep player within window bounds
         sf::Vector2f pos = player->getPosition();

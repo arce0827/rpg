@@ -21,9 +21,12 @@ private:
     void handleInput(float deltaTime);
     void handleShooting();
 
+    sf::RectangleShape healthBarBackground;
+    sf::RectangleShape healthBarFill;
+
 public:
     Player(float x, float y);
-    ~Player();
+    ~Player() = default;
     
     void update(float deltaTime, const sf::RenderWindow& window);
     void render(sf::RenderWindow& window);
@@ -38,4 +41,6 @@ public:
     void takeDamage(float damage);
     void heal(float amount);
     std::vector<std::unique_ptr<Projectile>>& getProjectiles() { return projectiles; }
+    bool isAlive() const;
+    sf::FloatRect getBounds() const;
 };

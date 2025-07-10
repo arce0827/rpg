@@ -17,6 +17,7 @@ add_executable(arces
     src/entities/Player.cpp
     src/entities/Projectile.cpp
     src/entities/Enemy.cpp
+    src/managers/CollisionManager.cpp
 )
 
 # --- Target Configuration for 'arces' ---

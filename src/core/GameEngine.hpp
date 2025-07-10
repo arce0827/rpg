@@ -3,6 +3,7 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "managers/CollisionManager.hpp"
 
 class Player;
 class Enemy;
@@ -14,6 +15,7 @@ class GameEngine {
         std::vector<std::unique_ptr<Enemy>> enemies;
         sf::Clock clock;
         bool isRunning;
+        CollisionManager collisionManager;
 
         enum class GameState {
             MENU,

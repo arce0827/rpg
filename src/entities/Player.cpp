@@ -16,9 +16,14 @@ Player::Player(float x, float y) :
     sprite.setFillColor(sf::Color::Blue);
     sprite.setOrigin({sprite.getRadius(), sprite.getRadius()});
     sprite.setPosition(position);
-}
 
-Player::~Player() = default;
+    float healthBarWidth = 200.0f;
+    float healthBarHeight = 15.0f;
+    healthBarBackground.setSize({healthBarWidth, healthBarHeight});
+    healthBarBackground.setFillColor(sf::Color(100, 100, 100, 200));
+    healthBarFill.setSize({healthBarWidth, healthBarHeight});
+    healthBarFill.setFillColor(sf::Color::Green);
+}
 
 void Player::update(float deltaTime, const sf::RenderWindow& window) {
     handleInput(deltaTime);
@@ -35,13 +40,18 @@ void Player::update(float deltaTime, const sf::RenderWindow& window) {
         (*it)->update(deltaTime, bounds);
         
         // Remove projectiles that are off-screen
-        sf::Vector2f projPos = (*it)->getPosition();
-        if (projPos.x < -50 || projPos.x > 1074 || projPos.y < -50 || projPos.y > 818) {
+        if (!(*it)->getIsActive()) {
             it = projectiles.erase(it);
         } else {
             ++it;
         }
     }
+
+    healthBarBackground.setPosition({120.f, 25.f});
+    healthBarFill.setPosition({120.f, 25.f});
+
+    float healthPercent = health / maxHealth;
+    healthBarFill.setSize({healthBarBackground.getSize().x * healthPercent, healthBarFill.getSize().y});
 }
 
 void Player::handleInput(float deltaTime) {
@@ -112,6 +122,10 @@ void Player::render(sf::RenderWindow& window) {
     for (auto& projectile : projectiles) {
         projectile->render(window);
     }
+
+    // Render health bar
+    window.draw(healthBarBackground);
+    window.draw(healthBarFill);
 }
 
 void Player::takeDamage(float damage) {
@@ -122,4 +136,12 @@ void Player::takeDamage(float damage) {
 void Player::heal(float amount) {
     health += amount;
     if (health > maxHealth) health = maxHealth;
+}
+
+bool Player::isAlive() const{
+    return health > 0;
+}
+
+sf::FloatRect Player::getBounds() const{
+    return sprite.getGlobalBounds();
 }

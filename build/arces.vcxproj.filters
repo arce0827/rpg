@@ -16,6 +16,9 @@
     <ClCompile Include="C:\Users\LENOVO\rpg\src\entities\Enemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\LENOVO\rpg\src\managers\CollisionManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\LENOVO\rpg\CMakeLists.txt" />

@@ -15,6 +15,17 @@ Enemy::Enemy(float x, float y)
     sprite.setFillColor(sf::Color::Red);
     sprite.setOrigin({sprite.getRadius(), sprite.getRadius()});
     sprite.setPosition(position);
+
+    float healthBarWidth = 40.0f;
+    float healthBarHeight = 5.0f;
+    healthBarBackground.setSize({healthBarWidth, healthBarHeight});
+    healthBarBackground.setFillColor(sf::Color(100, 100, 100, 200));//dark grey
+    healthBarBackground.setOrigin({healthBarWidth / 2, healthBarHeight / 2});
+
+    healthBarFill.setSize({healthBarWidth, healthBarHeight});
+    healthBarFill.setFillColor(sf::Color::Red);
+    healthBarFill.setOrigin({healthBarWidth / 2, healthBarHeight / 2});
+
 }
 
 // "Enemy::" is added to handleMovement
@@ -43,6 +54,16 @@ void Enemy::update(float deltaTime, const sf::Vector2f& targetPosition) {
     handleMovement(deltaTime, targetPosition);
     handleShooting();
     sprite.setPosition(position);
+
+    // Update health bar
+    sf::Vector2f healthBarPos = position;
+    healthBarPos.y -= sprite.getRadius() + 10.0f;
+    healthBarBackground.setPosition(healthBarPos);
+    healthBarFill.setPosition(healthBarPos);
+
+    float healthPercent = health / maxHealth;
+    healthBarFill.setSize({healthBarBackground.getSize().x * healthPercent, healthBarFill.getSize().y});
+
 }
 
 // "Enemy::" is added to render
@@ -55,6 +76,9 @@ void Enemy::render(sf::RenderWindow& window) {
             std::cout<<"Rendering enemy at position: "<< position.x << ", " << position.y << std::endl;
         }
         renderCount++;
+
+        window.draw(healthBarBackground);
+        window.draw(healthBarFill);
     }
 }
 

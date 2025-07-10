@@ -217,21 +217,21 @@ sudo apt-get install libsfml-dev
 mkdir build && cd build
 cmake ..
 make
-./isaac
+./arces
 ```
 
 ### CMake Configuration
 ```cmake
 cmake_minimum_required(VERSION 3.10)
-project(IsaacRPG)
+project(arces)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(sfml 2.5 COMPONENTS graphics window system audio REQUIRED)
+find_package(sfml 3.0 COMPONENTS graphics window system audio REQUIRED)
 
 # Add executable and link libraries
-add_executable(isaac src/main.cpp)
-target_link_libraries(isaac sfml-graphics sfml-window sfml-system sfml-audio)
+add_executable(arces src/main.cpp)
+target_link_libraries(arces sfml-graphics sfml-window sfml-system sfml-audio)
 ```
 
 ## Game Features

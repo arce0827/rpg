@@ -14,6 +14,9 @@ private:
     float health;
     float maxHealth;
 
+    sf::RectangleShape healthBarBackground;
+    sf::RectangleShape healthBarFill;
+
     // Combat
     sf::Clock shootClock;
     float shootCooldown;
