@@ -169,15 +169,15 @@ Project repository:
 
 | Directory / File | Description | Status |
 |------------------|-------------|--------|
-| `src/main.cpp` | Program entry point | ⏳ |
-| `src/core/GameEngine.hpp` | Main game engine header | ⏳ |
-| `src/core/GameEngine.cpp` | Game engine implementation | ⏳ |
-| `src/entities/Player.hpp` | Player character header | ⏳ |
-| `src/entities/Player.cpp` | Player character implementation | ⏳ |
-| `src/entities/Enemy.hpp` | Enemy base class header | ⏳ |
-| `src/entities/Enemy.cpp` | Enemy base class implementation | ⏳ |
-| `src/entities/Projectile.hpp` | Projectile class header | ⏳ |
-| `src/entities/Projectile.cpp` | Projectile class implementation | ⏳ |
+| `src/main.cpp` | Program entry point | ⏳ **(partially done, will be updated more)** |
+| `src/core/GameEngine.hpp` | Main game engine header | ⏳ **(partially done, will be updated more)**|
+| `src/core/GameEngine.cpp` | Game engine implementation | ⏳ **(partially done, will be updated more)**|
+| `src/entities/Player.hpp` | Player character header | ⏳ **(partially done, will be updated more)**|
+| `src/entities/Player.cpp` | Player character implementation | ⏳ **(partially done, will be updated more)**|
+| `src/entities/Enemy.hpp` | Enemy base class header | ⏳ **(partially done, will be updated more)**|
+| `src/entities/Enemy.cpp` | Enemy base class implementation | ⏳ **(partially done, will be updated more)**|
+| `src/entities/Projectile.hpp` | Projectile class header | ⏳ **(partially done, will be updated more)**|
+| `src/entities/Projectile.cpp` | Projectile class implementation | ⏳ **(partially done, will be updated more)**|
 | `src/world/Room.hpp` | Room class header | ⏳ |
 | `src/world/Room.cpp` | Room class implementation | ⏳ |
 | `src/world/RoomGenerator.hpp` | Procedural generation header | ⏳ |
