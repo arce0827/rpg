@@ -336,6 +336,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\LENOVO\rpg\src\core\GameEngine.cpp" />
     <ClCompile Include="C:\Users\LENOVO\rpg\src\entities\Player.cpp" />
     <ClCompile Include="C:\Users\LENOVO\rpg\src\entities\Projectile.cpp" />
+    <ClCompile Include="C:\Users\LENOVO\rpg\src\entities\Enemy.cpp" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -1,14 +1,17 @@
 #pragma once
 #include <memory>
+#include <vector>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
 class Player;
+class Enemy;
 
 class GameEngine {
     private:
         sf::RenderWindow window;
         std::unique_ptr<Player> player;
+        std::vector<std::unique_ptr<Enemy>> enemies;
         sf::Clock clock;
         bool isRunning;
 
@@ -19,6 +22,11 @@ class GameEngine {
             GAME_OVER
         };
         GameState currentState;
+
+        void spawnEnemies();
+        void updateEnemies(float deltaTime);
+        void renderEnemies();
+
         public:
         GameEngine();
         ~GameEngine();

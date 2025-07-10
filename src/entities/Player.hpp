@@ -25,7 +25,7 @@ public:
     Player(float x, float y);
     ~Player();
     
-    void update(float deltaTime);
+    void update(float deltaTime, const sf::RenderWindow& window);
     void render(sf::RenderWindow& window);
     
     sf::Vector2f getPosition() const { return position; }

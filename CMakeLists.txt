@@ -16,6 +16,7 @@ add_executable(arces
     src/core/GameEngine.cpp
     src/entities/Player.cpp
     src/entities/Projectile.cpp
+    src/entities/Enemy.cpp
 )
 
 # --- Target Configuration for 'arces' ---

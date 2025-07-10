@@ -20,7 +20,7 @@ Player::Player(float x, float y) :
 
 Player::~Player() = default;
 
-void Player::update(float deltaTime) {
+void Player::update(float deltaTime, const sf::RenderWindow& window) {
     handleInput(deltaTime);
     handleShooting();
     
@@ -28,9 +28,11 @@ void Player::update(float deltaTime) {
     position += velocity * deltaTime;
     sprite.setPosition(position);
     
+    sf::FloatRect bounds({0.0f, 0.0f}, {static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)});
+
     // Update projectiles
     for (auto it = projectiles.begin(); it != projectiles.end();) {
-        (*it)->update(deltaTime);
+        (*it)->update(deltaTime, bounds);
         
         // Remove projectiles that are off-screen
         sf::Vector2f projPos = (*it)->getPosition();

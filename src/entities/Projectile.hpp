@@ -2,36 +2,37 @@
 #include <SFML/Graphics.hpp>
 
 class Projectile {
-    private:
-        sf::CircleShape sprite;
-        sf::Vector2f position;
-        sf::Vector2f velocity;
-        float damage;
-        bool isActive;
-    public:
-        Projectile(const sf::Vector2f& startPos, const sf::Vector2f& direction, float speed);
-        ~Projectile();
+private:
+    sf::CircleShape sprite;
+    sf::Vector2f velocity;
+    float damage;
+    bool isActive;
 
-        void update(float deltaTime);
-        void render(sf::RenderWindow& window);
+public:
+    Projectile(const sf::Vector2f& startPos, const sf::Vector2f& direction, float speed);
+    
+    ~Projectile();
 
-        sf::Vector2f getPosition() const {
-            return position;
-        }
+    void update(float deltaTime, const sf::FloatRect& bounds);
+    void render(sf::RenderWindow& window);
 
-        float getDamage() const {
-            return damage;
-        }
+    sf::Vector2f getPosition() const {
+        return sprite.getPosition();
+    }
 
-        bool getIsActive() const {
-            return isActive;
-        }
+    float getDamage() const {
+        return damage;
+    }
 
-        sf::FloatRect getBounds() const {
-            return sprite.getGlobalBounds();
-        }
+    bool getIsActive() const {
+        return isActive;
+    }
 
-        void setActive(bool state) {
-            isActive = state;
-        }
-    };
+    sf::FloatRect getBounds() const {
+        return sprite.getGlobalBounds();
+    }
+
+    void setActive(bool state) {
+        isActive = state;
+    }
+}; 

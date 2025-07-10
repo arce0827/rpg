@@ -1,7 +1,7 @@
 #include "entities/Projectile.hpp"
 
+// The constructor no longer needs to initialize a separate 'position' member.
 Projectile::Projectile(const sf::Vector2f& startPos, const sf::Vector2f& direction, float speed) :
-    position(startPos),
     velocity(direction * speed),
     damage(10.0f),
     isActive(true) {
@@ -10,20 +10,20 @@ Projectile::Projectile(const sf::Vector2f& startPos, const sf::Vector2f& directi
     sprite.setRadius(5.0f);
     sprite.setFillColor(sf::Color::Yellow);
     sprite.setOrigin({sprite.getRadius(), sprite.getRadius()});
-    sprite.setPosition(position);
+    sprite.setPosition(startPos); // Set the sprite's position directly.
 }
 
 Projectile::~Projectile() = default;
 
-void Projectile::update(float deltaTime) {
+// The update function now takes the screen bounds as an argument.
+void Projectile::update(float deltaTime, const sf::FloatRect& bounds) {
     if (!isActive) return;
 
-    // Update position
-    position += velocity * deltaTime;
-    sprite.setPosition(position);
+    // Update position directly on the sprite.
+    sprite.move(velocity * deltaTime);
 
-    // Deactivate if off-screen
-    if (position.x < -50 || position.x > 1074 || position.y < -50 || position.y > 818) {
+    // Deactivate if off-screen by checking if the bounds contain the sprite's position.
+    if (!bounds.contains(sprite.getPosition())) {
         isActive = false;
     }
 }
