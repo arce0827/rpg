@@ -184,8 +184,8 @@ Project repository:
 | `src/world/RoomGenerator.cpp` | Procedural generation implementation | ⏳ |
 | `src/items/Item.hpp` | Item system header | ⏳ |
 | `src/items/Item.cpp` | Item system implementation | ⏳ |
-| `src/managers/CollisionManager.hpp` | Collision detection header | ⏳ |
-| `src/managers/CollisionManager.cpp` | Collision detection implementation | ⏳ |
+| `src/managers/CollisionManager.hpp` | Collision detection header | ⏳ **(partially done, will be updated more)** |
+| `src/managers/CollisionManager.cpp` | Collision detection implementation | ⏳ **(partially done, will be updated more)** |
 | `src/managers/AudioManager.hpp` | Audio management header | ⏳ |
 | `src/managers/AudioManager.cpp` | Audio management implementation | ⏳ |
 | `src/managers/RenderManager.hpp` | Graphics rendering header | ⏳ |
