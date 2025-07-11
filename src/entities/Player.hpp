@@ -24,6 +24,9 @@ private:
     sf::RectangleShape healthBarBackground;
     sf::RectangleShape healthBarFill;
 
+    sf::Vector2f platformerVelocity;
+    bool isOnGround;
+
 public:
     Player(float x, float y);
     ~Player() = default;
@@ -43,4 +46,7 @@ public:
     std::vector<std::unique_ptr<Projectile>>& getProjectiles() { return projectiles; }
     bool isAlive() const;
     sf::FloatRect getBounds() const;
+
+    //Plat
+    void updatePlatformer(float deltaTime);
 };

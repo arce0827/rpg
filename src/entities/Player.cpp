@@ -145,3 +145,35 @@ bool Player::isAlive() const{
 sf::FloatRect Player::getBounds() const{
     return sprite.getGlobalBounds();
 }
+
+void Player::updatePlatformer(float deltaTime){
+    const float gravity = 1000.0f;
+    const float jumpStrength = 500.0f;
+    const float moveSpeed = 300.0f;
+
+    platformerVelocity.x = 0;
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::A)){
+        platformerVelocity.x -= moveSpeed; 
+    }
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::D)){
+        platformerVelocity.x += moveSpeed;
+    }
+
+    platformerVelocity.y += gravity * deltaTime;
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::W) && isOnGround){
+        platformerVelocity.y = -jumpStrength;
+        isOnGround = false;
+    }
+
+    sprite.move(platformerVelocity * deltaTime);
+
+    float groundLevel = 700.f;
+
+    if(sprite.getPosition().y + sprite.getRadius() > groundLevel){
+        sprite.setPosition({sprite.getPosition().x, groundLevel - sprite.getRadius()});
+        platformerVelocity.y = 0;
+        isOnGround = true;
+    }
+}

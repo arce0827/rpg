@@ -210,6 +210,7 @@ void GameEngine::update(float deltaTime) {
         updateMenu();
     }
     else if(currentState == GameState::PLATFORMER){
+        player->updatePlatformer(deltaTime);
         // Handle platformer state updates here
         // For now, just switch back to playing state when the player presses Enter
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
@@ -269,12 +270,13 @@ void GameEngine::render() {
     }
 
     if(currentState == GameState::PLATFORMER){
-        window.clear(sf::Color(50, 80, 120));
-        pauseText->setString("Platformer Mode");
-        sf::FloatRect pauseRect = pauseText->getLocalBounds();
-        pauseText->setOrigin({pauseRect.size.x / 2.0f, pauseRect.size.y / 2.0f});
-        pauseText->setPosition({window.getSize().x / 2.0f, window.getSize().y / 4.0f});
-        window.draw(*pauseText);
+        window.clear(sf::Color(135, 206, 235));
+        sf::RectangleShape ground({(float)window.getSize().x, 68.f});
+        ground.setPosition({0, 700});
+        ground.setFillColor(sf::Color(80, 180, 80)); // Green
+        window.draw(ground);
+
+        player->render(window);
     }
 
     window.display();
