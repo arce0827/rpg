@@ -52,6 +52,16 @@ GameEngine::GameEngine():
     sf::FloatRect exitRect = exitButtonText->getLocalBounds();
     exitButtonText->setOrigin({exitRect.size.x / 2.0f, exitRect.size.y / 2.0f});
     exitButtonText->setPosition({window.getSize().x / 2.0f, playButtonText->getPosition().y + 80.f});
+
+
+    pauseOverlay.setSize(sf::Vector2f(window.getSize()));
+    pauseOverlay.setFillColor(sf::Color(0, 0, 0, 150)); // Semi-transparent black
+
+    pauseText = std::make_unique<sf::Text>(font, "Paused", 60);
+    pauseText->setFillColor(sf::Color::White);
+    sf::FloatRect pauseRect = pauseText->getLocalBounds();
+    pauseText->setOrigin({pauseRect.size.x / 2.0f, pauseRect.size.y / 2.0f});
+    pauseText->setPosition({window.getSize().x / 2.0f, window.getSize().y / 4.0f});
 }
 
 
@@ -101,8 +111,11 @@ void GameEngine::processEvents() {
 
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
             if (keyPressed->code == sf::Keyboard::Key::Escape) {
-                isRunning = false;
-                window.close();
+                if(currentState == GameState::PLAYING) {
+                    currentState = GameState::PAUSED;
+                } else if (currentState == GameState::PAUSED) {
+                    currentState = GameState::PLAYING;
+                }
             }
         }
         if(const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
@@ -179,9 +192,29 @@ void GameEngine::update(float deltaTime) {
         if(transitioned == true){
             player->setPosition(pos);
         }
+
+        isPlayerOnPortal = false;
+        darkHole.setOutlineColor(sf::Color(80, 0, 120));
+
+        if(currentRoomX == holeRoomX && currentRoomY == holeRoomY){
+            if(darkHole.getGlobalBounds().findIntersection(player->getBounds()).has_value()){
+                isPlayerOnPortal = true;
+                darkHole.setOutlineColor(sf::Color::Magenta);
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)){
+                    currentState = GameState::PLATFORMER;
+                }
+            }
+        }
     }
     else if(currentState == GameState::MENU){
         updateMenu();
+    }
+    else if(currentState == GameState::PLATFORMER){
+        // Handle platformer state updates here
+        // For now, just switch back to playing state when the player presses Enter
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
+            currentState = GameState::PLAYING;
+        }
     }
 }
 
@@ -193,6 +226,9 @@ void GameEngine::render() {
 
     if (currentState == GameState::PLAYING) {
         currentRoom.render(window);
+        if(currentRoomX == holeRoomX && currentRoomY == holeRoomY){
+            window.draw(darkHole);
+        }
         player->render(window);
         if (showMinimap) {
             const float mapScale = 10.0f;
@@ -223,6 +259,22 @@ void GameEngine::render() {
 
     if (currentState == GameState::MENU) {
         renderMenu();
+        window.display();
+        return;
+    }
+
+    if(currentState == GameState::PAUSED) {
+        window.draw(pauseOverlay);
+        window.draw(*pauseText);
+    }
+
+    if(currentState == GameState::PLATFORMER){
+        window.clear(sf::Color(50, 80, 120));
+        pauseText->setString("Platformer Mode");
+        sf::FloatRect pauseRect = pauseText->getLocalBounds();
+        pauseText->setOrigin({pauseRect.size.x / 2.0f, pauseRect.size.y / 2.0f});
+        pauseText->setPosition({window.getSize().x / 2.0f, window.getSize().y / 4.0f});
+        window.draw(*pauseText);
     }
 
     window.display();
@@ -265,4 +317,18 @@ void GameEngine::createWorld(){
     playerMapIcon.setFillColor(sf::Color::Blue);
 
     showMinimap = false;
+
+    do {
+        holeRoomX = rand() % worldWidth;
+        holeRoomY = rand() % worldHeight;
+    } while (holeRoomX == currentRoomX && holeRoomY == currentRoomY); // Ensure it's not in the start room
+
+    darkHole.setRadius(30.f);
+    darkHole.setFillColor(sf::Color::Black);
+    darkHole.setOutlineThickness(2.f);
+    darkHole.setOutlineColor(sf::Color(80, 0, 120)); // Dark purple
+    darkHole.setOrigin({darkHole.getRadius(), darkHole.getRadius()});
+    darkHole.setPosition({1024 / 2.f, 768 / 2.f});
+
+    isPlayerOnPortal = false;
 }

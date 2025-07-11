@@ -25,6 +25,10 @@ class GameEngine {
         std::unique_ptr<sf::Text> playButtonText;
         std::unique_ptr<sf::Text> exitButtonText;
 
+        //Paused
+        sf::RectangleShape pauseOverlay;
+        std::unique_ptr<sf::Text> pauseText;
+
         void updateMenu();
         void renderMenu();
 
@@ -36,7 +40,8 @@ class GameEngine {
             MENU,
             PLAYING,
             PAUSED,
-            GAME_OVER
+            GAME_OVER,
+            PLATFORMER
         };
         GameState currentState;
 
@@ -45,6 +50,12 @@ class GameEngine {
         bool showMinimap;
         std::vector<std::vector<sf::RectangleShape>> minimapRects;
         sf::RectangleShape playerMapIcon;
+
+        //Platformer
+        sf::CircleShape darkHole;
+        int holeRoomX;
+        int holeRoomY;
+        bool isPlayerOnPortal;
 
         public:
         GameEngine();
