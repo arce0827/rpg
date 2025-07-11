@@ -7,19 +7,80 @@
 #include <optional>
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 GameEngine::GameEngine():
     window(sf::VideoMode({1024, 768}), "RPG", sf::Style::Close),
     isRunning(true),
-    currentState(GameState::PLAYING)
+    currentState(GameState::MENU),
+    titleText(),
+    playButtonText(),
+    exitButtonText()
 {
     srand(static_cast<unsigned int>(time(0))); // Seed random number generator
     window.setFramerateLimit(60);
     player = std::make_unique<Player>(512.0f, 384.0f);
     createWorld();
+ 
+    if(!font.openFromFile("C:/users/LENOVO/rpg/src/fonts/QuinqueFive.ttf")){
+        std::cerr << "Error loading font\n"<<std::endl;
+    }
+
+    // sf::Text default constructor, set font later
+    // (No need to reassign, members are already default-constructed)
+
+    // Title
+    // --- FIX: Swapped the font and string arguments to the correct order ---
+
+    // Title
+    titleText = std::make_unique<sf::Text>(font, "Gytis LOX", 60);
+    titleText->setFillColor(sf::Color::White);
+    sf::FloatRect titleRect = titleText->getLocalBounds();
+    titleText->setOrigin({titleRect.size.x / 2.0f, titleRect.size.y / 2.0f});
+    titleText->setPosition({window.getSize().x / 2.0f, window.getSize().y / 4.0f});
+
+    // Play Button
+    playButtonText = std::make_unique<sf::Text>(font, "Play", 40);
+    playButtonText->setFillColor(sf::Color::White);
+    sf::FloatRect playRect = playButtonText->getLocalBounds();
+    playButtonText->setOrigin({playRect.size.x / 2.0f, playRect.size.y / 2.0f});
+    playButtonText->setPosition({window.getSize().x / 2.0f, window.getSize().y / 2.0f});
+
+    // Exit Button
+    exitButtonText = std::make_unique<sf::Text>(font, "Exit", 40);
+    exitButtonText->setFillColor(sf::Color::White);
+    sf::FloatRect exitRect = exitButtonText->getLocalBounds();
+    exitButtonText->setOrigin({exitRect.size.x / 2.0f, exitRect.size.y / 2.0f});
+    exitButtonText->setPosition({window.getSize().x / 2.0f, playButtonText->getPosition().y + 80.f});
 }
 
+
 GameEngine::~GameEngine() = default;
+
+void GameEngine::updateMenu(){
+    sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+    if(playButtonText->getGlobalBounds().contains(mousePos)){
+        playButtonText->setFillColor(sf::Color::Yellow);
+    }
+    else{
+        playButtonText->setFillColor(sf::Color::White);
+    }
+
+    if(exitButtonText->getGlobalBounds().contains(mousePos)){
+        exitButtonText->setFillColor(sf::Color::Yellow);
+    }
+    else{
+        exitButtonText->setFillColor(sf::Color::White);
+    }
+}
+
+void GameEngine::renderMenu(){
+    window.clear(sf::Color(40, 40, 60));//dark blue-grey
+    window.draw(*titleText);
+    window.draw(*playButtonText);
+    window.draw(*exitButtonText);
+}
 
 void GameEngine::run() {
     sf::Clock clock;
@@ -47,6 +108,22 @@ void GameEngine::processEvents() {
         if(const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
             if(keyPressed->code == sf::Keyboard::Key::Tab){
                 showMinimap = !showMinimap;
+            }
+        }
+        if (event->is<sf::Event::MouseButtonPressed>()) {
+            if (currentState == GameState::MENU) {
+                sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                
+                // Check if the "Play" button was clicked
+                if (playButtonText->getGlobalBounds().contains(mousePos)) {
+                    currentState = GameState::PLAYING;
+                }
+
+                // Check if the "Exit" button was clicked
+                if (exitButtonText->getGlobalBounds().contains(mousePos)) {
+                    isRunning = false;
+                    window.close();
+                }
             }
         }
     }
@@ -103,6 +180,9 @@ void GameEngine::update(float deltaTime) {
             player->setPosition(pos);
         }
     }
+    else if(currentState == GameState::MENU){
+        updateMenu();
+    }
 }
 
 void GameEngine::render() {
@@ -114,31 +194,35 @@ void GameEngine::render() {
     if (currentState == GameState::PLAYING) {
         currentRoom.render(window);
         player->render(window);
+        if (showMinimap) {
+            const float mapScale = 10.0f;
+            const float mapPadding = 5.0f;
+
+            // Position the whole map in the top-right corner
+            const float mapBaseX = window.getSize().x - (world[0].size() * (mapScale + mapPadding)) - mapPadding;
+            const float mapBaseY = mapPadding;
+
+            // Draw each room's rectangle
+            for (int y = 0; y < minimapRects.size(); ++y) {
+                for (int x = 0; x < minimapRects[y].size(); ++x) {
+                    sf::Vector2f pos(mapBaseX + x * (mapScale + mapPadding), mapBaseY + y * (mapScale + mapPadding));
+                    minimapRects[y][x].setPosition(pos);
+                    window.draw(minimapRects[y][x]);
+                }
+            }
+
+            // Draw the player icon on the current room
+            playerMapIcon.setPosition({
+                mapBaseX + currentRoomX * (mapScale + mapPadding),
+                mapBaseY + currentRoomY * (mapScale + mapPadding)
+            });
+            window.draw(playerMapIcon);
+        }
     }
 
-    if (showMinimap) {
-        const float mapScale = 10.0f;
-        const float mapPadding = 5.0f;
 
-        // Position the whole map in the top-right corner
-        const float mapBaseX = window.getSize().x - (world[0].size() * (mapScale + mapPadding)) - mapPadding;
-        const float mapBaseY = mapPadding;
-
-        // Draw each room's rectangle
-        for (int y = 0; y < minimapRects.size(); ++y) {
-            for (int x = 0; x < minimapRects[y].size(); ++x) {
-                sf::Vector2f pos(mapBaseX + x * (mapScale + mapPadding), mapBaseY + y * (mapScale + mapPadding));
-                minimapRects[y][x].setPosition(pos);
-                window.draw(minimapRects[y][x]);
-            }
-        }
-
-        // Draw the player icon on the current room
-        playerMapIcon.setPosition({
-            mapBaseX + currentRoomX * (mapScale + mapPadding),
-            mapBaseY + currentRoomY * (mapScale + mapPadding)
-        });
-        window.draw(playerMapIcon);
+    if (currentState == GameState::MENU) {
+        renderMenu();
     }
 
     window.display();

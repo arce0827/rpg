@@ -19,6 +19,15 @@ class GameEngine {
         bool isRunning;
         CollisionManager collisionManager;
 
+        //MENU
+        sf::Font font;
+        std::unique_ptr<sf::Text> titleText;
+        std::unique_ptr<sf::Text> playButtonText;
+        std::unique_ptr<sf::Text> exitButtonText;
+
+        void updateMenu();
+        void renderMenu();
+
         std::vector<std::vector<std::unique_ptr<Room>>> world;
         int currentRoomX;
         int currentRoomY;
