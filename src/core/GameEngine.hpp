@@ -4,6 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "managers/CollisionManager.hpp"
+#include "entities/Player.hpp"
+#include "entities/Enemy.hpp"
+#include "world/Room.hpp"
 
 class Player;
 class Enemy;
@@ -12,10 +15,13 @@ class GameEngine {
     private:
         sf::RenderWindow window;
         std::unique_ptr<Player> player;
-        std::vector<std::unique_ptr<Enemy>> enemies;
         sf::Clock clock;
         bool isRunning;
         CollisionManager collisionManager;
+
+        std::vector<std::vector<std::unique_ptr<Room>>> world;
+        int currentRoomX;
+        int currentRoomY;
 
         enum class GameState {
             MENU,
@@ -25,9 +31,11 @@ class GameEngine {
         };
         GameState currentState;
 
-        void spawnEnemies();
-        void updateEnemies(float deltaTime);
-        void renderEnemies();
+        void createWorld();
+
+        bool showMinimap;
+        std::vector<std::vector<sf::RectangleShape>> minimapRects;
+        sf::RectangleShape playerMapIcon;
 
         public:
         GameEngine();

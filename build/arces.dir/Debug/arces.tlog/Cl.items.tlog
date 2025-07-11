@@ -4,3 +4,4 @@ C:\Users\LENOVO\rpg\src\entities\Player.cpp;C:\Users\LENOVO\rpg\build\arces.dir\
 C:\Users\LENOVO\rpg\src\entities\Projectile.cpp;C:\Users\LENOVO\rpg\build\arces.dir\Debug\Projectile.obj
 C:\Users\LENOVO\rpg\src\entities\Enemy.cpp;C:\Users\LENOVO\rpg\build\arces.dir\Debug\Enemy.obj
 C:\Users\LENOVO\rpg\src\managers\CollisionManager.cpp;C:\Users\LENOVO\rpg\build\arces.dir\Debug\CollisionManager.obj
+C:\Users\LENOVO\rpg\src\world\Room.cpp;C:\Users\LENOVO\rpg\build\arces.dir\Debug\Room.obj
