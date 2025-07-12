@@ -22,6 +22,9 @@
     <ClCompile Include="C:\Users\LENOVO\rpg\src\world\Room.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\LENOVO\rpg\src\world\PlatformerLevel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\LENOVO\rpg\CMakeLists.txt" />

@@ -48,5 +48,5 @@ public:
     sf::FloatRect getBounds() const;
 
     //Plat
-    void updatePlatformer(float deltaTime);
+    void updatePlatformer(float deltaTime, const std::vector<sf::RectangleShape>& platforms, const std::vector<sf::RectangleShape>& spikes);
 };

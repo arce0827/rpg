@@ -339,6 +339,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\LENOVO\rpg\src\entities\Enemy.cpp" />
     <ClCompile Include="C:\Users\LENOVO\rpg\src\managers\CollisionManager.cpp" />
     <ClCompile Include="C:\Users\LENOVO\rpg\src\world\Room.cpp" />
+    <ClCompile Include="C:\Users\LENOVO\rpg\src\world\PlatformerLevel.cpp" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <SFML/Config.hpp>
 
 GameEngine::GameEngine():
     window(sf::VideoMode({1024, 768}), "RPG", sf::Style::Close),
@@ -25,12 +26,6 @@ GameEngine::GameEngine():
     if(!font.openFromFile("C:/users/LENOVO/rpg/src/fonts/QuinqueFive.ttf")){
         std::cerr << "Error loading font\n"<<std::endl;
     }
-
-    // sf::Text default constructor, set font later
-    // (No need to reassign, members are already default-constructed)
-
-    // Title
-    // --- FIX: Swapped the font and string arguments to the correct order ---
 
     // Title
     titleText = std::make_unique<sf::Text>(font, "Gytis LOX", 60);
@@ -62,6 +57,9 @@ GameEngine::GameEngine():
     sf::FloatRect pauseRect = pauseText->getLocalBounds();
     pauseText->setOrigin({pauseRect.size.x / 2.0f, pauseRect.size.y / 2.0f});
     pauseText->setPosition({window.getSize().x / 2.0f, window.getSize().y / 4.0f});
+
+    platformerLevel = std::make_unique<PlatformerLevel>();
+    platformerView.setSize({static_cast<sf::Vector2f>(window.getSize())});
 }
 
 
@@ -121,6 +119,15 @@ void GameEngine::processEvents() {
         if(const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
             if(keyPressed->code == sf::Keyboard::Key::Tab){
                 showMinimap = !showMinimap;
+            }
+            if(keyPressed->code == sf::Keyboard::Key::Enter && currentState == GameState::PLATFORMER){
+                if(player->getBounds().findIntersection(platformerLevel->getEndDoor().getGlobalBounds()).has_value()){
+                    currentState = GameState::PLAYING;
+                    player->setPosition({(holeRoomX * 1024.f) + 512.f, (holeRoomY * 768.f) + 450.f});
+                    window.setView(window.getDefaultView());
+                    render();
+                    return;
+                }   
             }
         }
         if (event->is<sf::Event::MouseButtonPressed>()) {
@@ -210,12 +217,11 @@ void GameEngine::update(float deltaTime) {
         updateMenu();
     }
     else if(currentState == GameState::PLATFORMER){
-        player->updatePlatformer(deltaTime);
-        // Handle platformer state updates here
-        // For now, just switch back to playing state when the player presses Enter
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
-            currentState = GameState::PLAYING;
-        }
+        player->updatePlatformer(deltaTime, platformerLevel->getPlatforms(), platformerLevel->getSpikes());
+        
+        float cameraX = std::max(player->getPosition().x, window.getSize().x / 2.f);
+        platformerView.setCenter({cameraX, window.getSize().y / 2.f});
+        
     }
 }
 
@@ -271,13 +277,17 @@ void GameEngine::render() {
 
     if(currentState == GameState::PLATFORMER){
         window.clear(sf::Color(135, 206, 235));
-        sf::RectangleShape ground({(float)window.getSize().x, 68.f});
-        ground.setPosition({0, 700});
-        ground.setFillColor(sf::Color(80, 180, 80)); // Green
-        window.draw(ground);
+         // --- Set the camera view ---
+        window.setView(platformerView);
+
+        platformerLevel->render(window);
+        player->render(window);
 
         player->render(window);
     }
+
+    window.setView(window.getDefaultView());
+
 
     window.display();
 }

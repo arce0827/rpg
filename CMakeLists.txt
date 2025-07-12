@@ -19,6 +19,7 @@ add_executable(arces
     src/entities/Enemy.cpp
     src/managers/CollisionManager.cpp
     src/world/Room.cpp
+    src/world/PlatformerLevel.cpp
 )
 
 # --- Target Configuration for 'arces' ---

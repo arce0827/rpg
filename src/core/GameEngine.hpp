@@ -7,6 +7,7 @@
 #include "entities/Player.hpp"
 #include "entities/Enemy.hpp"
 #include "world/Room.hpp"
+#include "world/PlatformerLevel.hpp"
 
 class Player;
 class Enemy;
@@ -35,6 +36,9 @@ class GameEngine {
         std::vector<std::vector<std::unique_ptr<Room>>> world;
         int currentRoomX;
         int currentRoomY;
+
+        std::unique_ptr<PlatformerLevel> platformerLevel;
+        sf::View platformerView;
 
         enum class GameState {
             MENU,

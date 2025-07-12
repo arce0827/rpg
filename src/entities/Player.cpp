@@ -146,9 +146,9 @@ sf::FloatRect Player::getBounds() const{
     return sprite.getGlobalBounds();
 }
 
-void Player::updatePlatformer(float deltaTime){
-    const float gravity = 1000.0f;
-    const float jumpStrength = 500.0f;
+void Player::updatePlatformer(float deltaTime, const std::vector<sf::RectangleShape>& platforms, const std::vector<sf::RectangleShape>& spikes) {
+    const float gravity = 1100.0f;
+    const float jumpStrength = 650.0f;
     const float moveSpeed = 300.0f;
 
     platformerVelocity.x = 0;
@@ -160,20 +160,50 @@ void Player::updatePlatformer(float deltaTime){
         platformerVelocity.x += moveSpeed;
     }
 
-    platformerVelocity.y += gravity * deltaTime;
+    sprite.move({platformerVelocity.x * deltaTime, 0});
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::W) && isOnGround){
+        // Horizontal Collision Check
+    for (const auto& platform : platforms) {
+        if (sprite.getGlobalBounds().findIntersection(platform.getGlobalBounds()).has_value()) {
+            // Collision detected, move player back
+            if (platformerVelocity.x > 0) { // Moving right
+                sprite.setPosition({platform.getPosition().x - sprite.getRadius(), sprite.getPosition().y});
+            } else if (platformerVelocity.x < 0) { // Moving left
+                sprite.setPosition({platform.getPosition().x + platform.getSize().x + sprite.getRadius(), sprite.getPosition().y});
+            }
+        }
+    }
+
+    // --- Vertical Movement ---
+    platformerVelocity.y += gravity * deltaTime;
+    sprite.move({0, platformerVelocity.y * deltaTime});
+    isOnGround = false; // Assume not on ground until proven otherwise
+
+    // Vertical Collision Check
+    for (const auto& platform : platforms) {
+        if (sprite.getGlobalBounds().findIntersection(platform.getGlobalBounds()).has_value()) {
+            if (platformerVelocity.y > 0) { // Moving down
+                sprite.setPosition({sprite.getPosition().x, platform.getPosition().y - sprite.getRadius()});
+                platformerVelocity.y = 0;
+                isOnGround = true;
+            } else if (platformerVelocity.y < 0) { // Moving up (bonking head)
+                sprite.setPosition({sprite.getPosition().x, platform.getPosition().y + platform.getSize().y + sprite.getRadius()});
+                platformerVelocity.y = 0;
+            }
+        }
+    }
+
+    // --- Jumping ---
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Space) && isOnGround) {
         platformerVelocity.y = -jumpStrength;
         isOnGround = false;
     }
-
-    sprite.move(platformerVelocity * deltaTime);
-
-    float groundLevel = 700.f;
-
-    if(sprite.getPosition().y + sprite.getRadius() > groundLevel){
-        sprite.setPosition({sprite.getPosition().x, groundLevel - sprite.getRadius()});
-        platformerVelocity.y = 0;
-        isOnGround = true;
+    
+    // --- Spike Collision ---
+    for (const auto& spike : spikes) {
+        if (sprite.getGlobalBounds().findIntersection(spike.getGlobalBounds()).has_value()) {
+            sprite.setPosition({100, 600});
+            platformerVelocity = {0,0};
+        }
     }
 }
