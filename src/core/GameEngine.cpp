@@ -21,6 +21,7 @@ GameEngine::GameEngine():
     srand(static_cast<unsigned int>(time(0))); // Seed random number generator
     window.setFramerateLimit(60);
     player = std::make_unique<Player>(512.0f, 384.0f);
+    loadTextures();
     createWorld();
  
     if(!font.openFromFile("C:/users/LENOVO/rpg/src/fonts/QuinqueFive.ttf")){
@@ -48,6 +49,13 @@ GameEngine::GameEngine():
     exitButtonText->setOrigin({exitRect.size.x / 2.0f, exitRect.size.y / 2.0f});
     exitButtonText->setPosition({window.getSize().x / 2.0f, playButtonText->getPosition().y + 80.f});
 
+    //questionMarkText
+    questionMarkText = std::make_unique<sf::Text>(font, "?", 18);
+    questionMarkText->setFillColor(sf::Color::White);
+    sf::FloatRect questionMarkTextRect = questionMarkText->getLocalBounds();
+    questionMarkText->setOrigin({questionMarkTextRect.size.x / 2.0f, questionMarkTextRect.size.y / 2.0f});
+    questionMarkText->setPosition({window.getSize().x - 50.f, window.getSize().y - 50.f});
+    
 
     pauseOverlay.setSize(sf::Vector2f(window.getSize()));
     pauseOverlay.setFillColor(sf::Color(0, 0, 0, 150)); // Semi-transparent black
@@ -198,6 +206,7 @@ void GameEngine::update(float deltaTime) {
         }
         if(transitioned == true){
             player->setPosition(pos);
+            world[currentRoomY][currentRoomX]->visit();
         }
 
         isPlayerOnPortal = false;
@@ -227,7 +236,7 @@ void GameEngine::update(float deltaTime) {
 
 void GameEngine::render() {
     Room& currentRoom = *world[currentRoomY][currentRoomX];
-    sf::Color bgColor = currentRoom.getBackgroundColor();
+    sf::Color bgColor = currentRoom.getMinimapColor();
 
     window.clear(bgColor);
 
@@ -238,8 +247,8 @@ void GameEngine::render() {
         }
         player->render(window);
         if (showMinimap) {
-            const float mapScale = 10.0f;
-            const float mapPadding = 5.0f;
+            const float mapScale = 25.0f;
+            const float mapPadding = 9.0f;
 
             // Position the whole map in the top-right corner
             const float mapBaseX = window.getSize().x - (world[0].size() * (mapScale + mapPadding)) - mapPadding;
@@ -250,7 +259,22 @@ void GameEngine::render() {
                 for (int x = 0; x < minimapRects[y].size(); ++x) {
                     sf::Vector2f pos(mapBaseX + x * (mapScale + mapPadding), mapBaseY + y * (mapScale + mapPadding));
                     minimapRects[y][x].setPosition(pos);
+
+                    // Check if the room has been visited
+                    if (world[y][x]->hasBeenVisited()) {
+                        // If visited, show a slightly brighter version of its background color
+                        minimapRects[y][x].setFillColor(world[y][x]->getMinimapColor()); // You would need to add this function to Room
+                    } else {
+                        // If not visited, show a black square
+                        minimapRects[y][x].setFillColor(sf::Color::Black);
+                    }
                     window.draw(minimapRects[y][x]);
+
+                    // Draw a question mark on unvisited rooms
+                    if (!world[y][x]->hasBeenVisited()) {
+                        questionMarkText->setPosition({pos.x + mapScale / 2.f, pos.y + mapScale / 2.f});
+                        window.draw(*questionMarkText);
+                    }
                 }
             }
 
@@ -301,9 +325,9 @@ void GameEngine::createWorld(){
         world[y].resize(worldWidth);
         for(int x = 0; x < worldWidth; ++x){
             // Create a room with a random background color
-            sf::Color bgColor = sf::Color(rand() % 256, rand() % 256, rand() % 256);
-            world[y][x] = std::make_unique<Room>(bgColor);
-
+            int randomIndex = rand() % backgroundTextures.size();
+            sf::Color mapIconColor = sf::Color(25, 80, 25);
+            world[y][x] = std::make_unique<Room>(backgroundTextures[randomIndex], mapIconColor);
             // Add some enemies to the room
             if (rand() % 2 == 0) { // Randomly decide to add an enemy
                 world[y][x]->addEnemy(static_cast<float>(x * 200 + 100), static_cast<float>(y * 200 + 100));
@@ -313,14 +337,14 @@ void GameEngine::createWorld(){
     currentRoomX = 1;
     currentRoomY = 1;
 
-    const float mapScale = 10.0f;
-    const float mapPadding = 5.0f;
+    const float mapScale = 25.0f;
+    const float mapPadding = 9.0f;
     minimapRects.resize(worldHeight);
     for (int y = 0; y < worldHeight; ++y) {
         minimapRects[y].resize(worldWidth);
         for (int x = 0; x < worldWidth; ++x) {
             minimapRects[y][x].setSize({mapScale, mapScale});
-            minimapRects[y][x].setFillColor(world[y][x]->getBackgroundColor() + sf::Color(50, 50, 50)); // Slightly brighter than room
+            minimapRects[y][x].setFillColor(world[y][x]->getMinimapColor() + sf::Color(50, 50, 50)); // Slightly brighter than room
             minimapRects[y][x].setOutlineThickness(1.0f);
             minimapRects[y][x].setOutlineColor(sf::Color::White);
         }
@@ -343,4 +367,37 @@ void GameEngine::createWorld(){
     darkHole.setPosition({1024 / 2.f, 768 / 2.f});
 
     isPlayerOnPortal = false;
+    world[currentRoomY][currentRoomX]->visit(); // Mark the starting room as visited
+}
+void GameEngine::loadTextures(){
+    sf::Texture tempTexture;
+    if(tempTexture.loadFromFile("C:\\users\\LENOVO\\rpg\\src\\textures\\background1.jfif")){
+        backgroundTextures.push_back(std::move(tempTexture));
+    }
+    if(tempTexture.loadFromFile("C:\\users\\LENOVO\\rpg\\src\\textures\\background2.jfif")){
+        backgroundTextures.push_back(std::move(tempTexture));
+    }
+    if(tempTexture.loadFromFile("C:\\users\\LENOVO\\rpg\\src\\textures\\background3.jfif")){
+        backgroundTextures.push_back(std::move(tempTexture));
+    }
+    if(tempTexture.loadFromFile("C:\\users\\LENOVO\\rpg\\src\\textures\\background4.jfif")){
+        backgroundTextures.push_back(std::move(tempTexture));
+    }
+    if(tempTexture.loadFromFile("C:\\users\\LENOVO\\rpg\\src\\textures\\background5.jfif")){
+        backgroundTextures.push_back(std::move(tempTexture));
+    }
+    if(tempTexture.loadFromFile("C:\\users\\LENOVO\\rpg\\src\\textures\\background6.jfif")){
+        backgroundTextures.push_back(std::move(tempTexture));
+    }
+    if(tempTexture.loadFromFile("C:\\users\\LENOVO\\rpg\\src\\textures\\background7.jfif")){
+        backgroundTextures.push_back(std::move(tempTexture));
+    }
+    if(tempTexture.loadFromFile("C:\\users\\LENOVO\\rpg\\src\\textures\\background8.jfif")){
+        backgroundTextures.push_back(std::move(tempTexture));
+    }
+    if(tempTexture.loadFromFile("C:\\users\\LENOVO\\rpg\\src\\textures\\background9.jfif")){
+        backgroundTextures.push_back(std::move(tempTexture));
+    }
+
+
 }

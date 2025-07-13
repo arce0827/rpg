@@ -6,18 +6,21 @@
 
 class Room{
     public:
-        Room(sf::Color backgroundColor = sf::Color::Black);
+        Room(const sf::Texture& backgroundTexture, sf::Color mapColor);
         ~Room() = default;
 
         void update(float deltaTime, const sf::Vector2f& playerPosition);
         void render(sf::RenderWindow& window);
-
+        void visit();
+        bool hasBeenVisited() const;
         void addEnemy(float x, float y);
+        sf::Color getMinimapColor() const { return minimapColor; }
 
         std::vector<std::unique_ptr<Enemy>>& getEnemies();
-        sf::Color getBackgroundColor() const;
 
     private:
-        sf::Color backgroundColor;
+        sf::Sprite backgroundSprite;
         std::vector<std::unique_ptr<Enemy>> enemies;
+        bool isVisited;
+        sf::Color minimapColor;
 };

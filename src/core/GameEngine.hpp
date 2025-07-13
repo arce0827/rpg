@@ -40,6 +40,11 @@ class GameEngine {
         std::unique_ptr<PlatformerLevel> platformerLevel;
         sf::View platformerView;
 
+        //gytis
+        std::vector<sf::Texture> backgroundTextures;
+        void loadTextures();
+        std::unique_ptr<sf::Text> questionMarkText;
+
         enum class GameState {
             MENU,
             PLAYING,

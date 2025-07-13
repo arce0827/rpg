@@ -15,7 +15,7 @@ PlatformerLevel::PlatformerLevel(){
     platforms.push_back(sf::RectangleShape({150.f, 30.f}));
     platforms.back().setPosition({50.f, 250.f});
 
-    platforms.push_back(sf::RectangleShape({200.f, 30.f}));
+    platforms.push_back(sf::RectangleShape({130.f, 30.f}));
     platforms.back().setPosition({320.f, 333.f});
 
     // color for all platforms
